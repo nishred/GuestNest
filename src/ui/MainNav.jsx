@@ -1,12 +1,23 @@
 import styled from "styled-components";
 
+import { NavLink } from "react-router-dom";
+
+import { FaHome } from "react-icons/fa";
+import { FaCalendarDays } from "react-icons/fa6";
+
+import { HiHomeModern } from "react-icons/hi2";
+
+import { FaUsers } from "react-icons/fa6";
+
+import { IoSettings } from "react-icons/io5";
+
 const NavList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
 `;
 
-const Link = styled.a`
+const StyledNavLink = styled(NavLink)`
   &:link,
   &:visited {
     display: flex;
@@ -44,3 +55,48 @@ const Link = styled.a`
     color: var(--color-brand-600);
   }
 `;
+
+const MainNav = () => {
+  return (
+    <nav>
+      <NavList>
+        <li>
+          <StyledNavLink to="/dashboard">
+            <FaHome />
+
+            <span>Home</span>
+          </StyledNavLink>
+        </li>
+
+        <li>
+          <StyledNavLink to="/bookings">
+            <FaCalendarDays />
+            <span>Bookings</span>
+          </StyledNavLink>
+        </li>
+
+        <li>
+          <StyledNavLink to="/cabins">
+            <HiHomeModern />
+            <span>Cabins</span>
+          </StyledNavLink>
+        </li>
+
+        <StyledNavLink to="/users">
+          <FaUsers />
+
+          <span>Users</span>
+        </StyledNavLink>
+
+        <li>
+          <StyledNavLink to="/settings">
+            <IoSettings />
+            <span>Settings</span>
+          </StyledNavLink>
+        </li>
+      </NavList>
+    </nav>
+  );
+};
+
+export default MainNav;

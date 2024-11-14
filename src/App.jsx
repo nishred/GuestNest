@@ -36,5 +36,3 @@ function App() {
 }
 
 export default App;
-
-// The global styles component has to be a self closing component and has to be a sibling of all the components
