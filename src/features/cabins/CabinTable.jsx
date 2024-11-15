@@ -1,4 +1,10 @@
 import styled from "styled-components";
+import { fetchCabins } from "../../services/apiCabins";
+
+import Spinner from "../../ui/Spinner";
+import CabinRow from "./CabinRow";
+
+import { useQuery } from "@tanstack/react-query";
 
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -8,6 +14,7 @@ const Table = styled.div`
   border-radius: 7px;
   overflow: hidden;
 `;
+
 
 const TableHeader = styled.header`
   display: grid;
@@ -23,3 +30,53 @@ const TableHeader = styled.header`
   color: var(--color-grey-600);
   padding: 1.6rem 2.4rem;
 `;
+
+// the query key uniquely indentifies the data that we are going to query
+
+//querFn is the actual function responsible for fetching the data from the api
+
+const CabinTable = () => {
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["cabin"],
+    queryFn: fetchCabins,
+  });
+
+  if (isLoading) return <Spinner />;
+
+  return (
+
+          
+         <Table>
+         
+         <TableHeader>
+         
+         <div></div>
+
+         <div>Cabin</div>
+
+         <div>Capacity</div>
+
+         <div>Price</div>
+
+         <div>Discount</div>
+
+         <div></div>
+         
+         </TableHeader>
+
+         {data.map((cabin) => {
+
+             return <CabinRow cabin={cabin} key={cabin.id} />
+
+         })}
+         
+         </Table>
+
+
+
+  )
+
+
+};
+
+export default CabinTable;
