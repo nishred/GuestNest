@@ -48,6 +48,8 @@ const Discount = styled.div`
 // in onSuccess we tell what has to happen after a successful mutation
 
 const CabinRow = ({ cabin }) => {
+
+  
   const queryClient = useQueryClient();
 
   const { isLoading: isDeleting, mutate } = useMutation({
