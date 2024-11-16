@@ -6,9 +6,16 @@ import { deleteCabin } from "../../services/apiCabins";
 
 import { toast } from "react-hot-toast";
 
+import { useState } from "react";
+import CreateCabinForm from "./CreateCabinForm";
+
+import { AiOutlineDash } from "react-icons/ai";
+import useDeleteCabin from "../../hooks/useDeleteCabin";
+
+
 const TableRow = styled.div`
   display: grid;
-  grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
+  grid-template-columns: 0.6fr 1fr 1.6fr 1fr 1fr 1fr;
   column-gap: 2.4rem;
   align-items: center;
   padding: 1.4rem 2.4rem;
@@ -43,30 +50,53 @@ const Discount = styled.div`
   font-family: "Sono";
   font-weight: 500;
   color: var(--color-green-700);
+
+  text-align: center;
+
+  & .icon
+  {
+    margin : 0px auto;
+
+  }
 `;
+
+const CabinRowButton = styled.button`
+  background-color: var(--color-brand-600);
+  padding: 10px 20px;
+  color: wheat;
+
+  border-radius: 8px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 0.8rem;
+`;
+
 
 // in onSuccess we tell what has to happen after a successful mutation
 
 const CabinRow = ({ cabin }) => {
+  const [showEditForm, setShowEditForm] = useState(false);
 
-  
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
-  const { isLoading: isDeleting, mutate } = useMutation({
-    mutationFn: deleteCabin,
-    onSuccess: () => {
+  // const { isLoading: isDeleting, mutate } = useMutation({
+  //   mutationFn: deleteCabin,
+  //   onSuccess: () => {
+  //     toast("Cabin has been deleted successfully");
 
-      toast("Cabin has been deleted successfully")
+  //     queryClient.invalidateQueries({
+  //       queryKey: ["cabin"],
+  //     });
+  //   },
 
-      queryClient.invalidateQueries({
-        queryKey: ["cabin"],
-      });
-    },
+  //   onError: (err) => {
+  //     window.alert(" An error occured while deleting the cabin");
+  //   },
+  // });
 
-    onError: (err) => {
-      window.alert(" An error occured while deleting the cabin");
-    },
-  });
+  const {isDeleting,mutate} = useDeleteCabin()
 
   const {
     id: cabinId,
@@ -79,25 +109,39 @@ const CabinRow = ({ cabin }) => {
   } = cabin;
 
   return (
-    <TableRow>
-      <Img src={image} />
+    <>
+      <TableRow>
+        <Img src={image} />
 
-      <Cabin>{name}</Cabin>
+        <Cabin>{name}</Cabin>
 
-      <div>Fits up to {maxCapacity} guests</div>
+        <div>Fits up to {maxCapacity} guests</div>
 
-      <Price>{formatCurrency(regularPrice)}</Price>
+        <Price>{formatCurrency(regularPrice)}</Price>
 
-      <Discount>{formatCurrency(discount)}</Discount>
+        <Discount>{(discount>0)?formatCurrency(discount):(<AiOutlineDash className="icon" size = {24}/>)}</Discount>
 
-      <button
-        onClick={() => {
-          mutate(cabinId);
-        }}
-      >
-        Delete
-      </button>
-    </TableRow>
+        <ButtonContainer>
+          <CabinRowButton
+            onClick={() => {
+              setShowEditForm((prev) => !prev);
+            }}
+          >
+            Edit
+          </CabinRowButton>
+
+          <CabinRowButton
+            onClick={() => {
+              mutate(cabinId);
+            }}
+          >
+            Delete
+          </CabinRowButton>
+        </ButtonContainer>
+      </TableRow>
+
+      {showEditForm && <CreateCabinForm cabinToEdit={cabin} />}
+    </>
   );
 };
 
