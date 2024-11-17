@@ -15,14 +15,12 @@ import useCreateCabin from "../../hooks/useCreateCabin";
 
 import useEditCabin from "../../hooks/useEditCabin";
 
-
 import FormRow from "../../ui/FormRow";
 
-function CreateCabinForm({ cabinToEdit = {} }) {
-
+function CreateCabinForm({ cabinToEdit = {}, setIsModalOpen }) {
   const { id: editId, ...editValues } = cabinToEdit;
 
-  console.log(editValues)
+  console.log(editValues);
 
   const isEditSession = editId ? true : false;
 
@@ -68,10 +66,9 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   //   onError: () => {},
   // });
 
+  const { isCreating, mutate: createMutate } = useCreateCabin();
 
-  const {isCreating,mutate:createMutate} = useCreateCabin()
-
-  const {isEditing,mutate:editMutate} = useEditCabin()
+  const { isEditing, mutate: editMutate } = useEditCabin();
 
   const { errors } = formState;
 
@@ -79,15 +76,35 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     console.log(data);
 
     if (isEditSession)
-      editMutate({
-        cabin: {
-          ...data,
-          image:
-            typeof data.image === "string" ? cabinToEdit.image : data.image[0],
+      editMutate(
+        {
+          cabin: {
+            ...data,
+            image:
+              typeof data.image === "string"
+                ? cabinToEdit.image
+                : data.image[0],
+          },
+          id: editId,
         },
-        id: editId,
-      });
-    else createMutate({ ...data, image: data.image[0] });
+        {
+          onSuccess: (data) => {
+            reset();
+            setIsModalOpen?.(false);
+          },
+        }
+      );
+    else
+      createMutate(
+        { ...data, image: data.image[0] },
+        {
+          onSuccess: (data) => {
+            reset();
+
+            setIsModalOpen?.(false);
+          },
+        }
+      );
   }
 
   function onError(errors) {
@@ -97,7 +114,10 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   const isLoading = isCreating || isEditing;
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit, onError)}
+      type={setIsModalOpen ? "modal" : ""}
+    >
       <FormRow label={"name"} error={errors.name?.message}>
         <Input
           type="text"
@@ -187,7 +207,14 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button
+          variation="secondary"
+          type="reset"
+          onClick={(e) => {
+            e.preventDefault();
+            if (setIsModalOpen) setIsModalOpen(false);
+          }}
+        >
           Cancel
         </Button>
         <Button disabled={isLoading}>

@@ -1,5 +1,12 @@
 import styled from "styled-components";
 
+import { createPortal } from "react-dom";
+import { cloneElement, useEffect, useState } from "react";
+
+import React from "react";
+import useEditCabin from "../hooks/useEditCabin";
+import useCloseModal from "../hooks/useCloseModal";
+
 const StyledModal = styled.div`
   position: fixed;
   top: 50%;
@@ -48,3 +55,83 @@ const Button = styled.button`
     color: var(--color-grey-500);
   }
 `;
+
+// const Modal = ({ children, setIsOpenModal }) => {
+//   return createPortal(
+//     <Overlay
+//       onClick={() => {
+//         setIsOpenModal(false);
+//       }}
+//     >
+//       <StyledModal onClick={(e) => {
+
+//         e.stopPropagation()
+
+//       }}>
+//         <Button onClick={() => setIsOpenModal(false)}>
+//           <FaXmark />
+//         </Button>
+//         <div>{children}</div>
+//       </StyledModal>
+//     </Overlay>,
+//     document.body
+//   );
+// };
+
+const ModalContext = React.createContext();
+
+const Modal = ({ children }) => {
+
+  const {ref,isModalOpen,setIsModalOpen} = useCloseModal()  
+
+  return (
+    <ModalContext.Provider value={{ ref,isModalOpen, setIsModalOpen }}>
+      {children}
+    </ModalContext.Provider>
+  );
+};
+
+const Open = ({ children }) => {
+  const { setIsModalOpen } = React.useContext(ModalContext);
+
+  return cloneElement(children, {
+    onClick: (e) => {
+      e.stopPropagation();
+      setIsModalOpen(true);
+    },
+  });
+};
+
+const Window = ({ children, close }) => {
+  const { isModalOpen, setIsModalOpen,ref } = React.useContext(ModalContext);
+
+  if (!isModalOpen) return null;
+
+  return createPortal(
+    <Overlay>
+      <StyledModal ref={ref}>
+        {cloneElement(children, { setIsModalOpen : setIsModalOpen })}
+        <Button onClick={() => setIsModalOpen(false)}>{close}</Button>
+      </StyledModal>
+    </Overlay>,
+    document.body
+  );
+};
+
+const Close = ({ children }) => {
+  const { setIsModalOpen } = React.useContext(ModalContext);
+
+  return (
+    <Button onClick={() => setIsModalOpen(false)}>{children} Manvitha</Button>
+  );
+};
+
+Modal.Open = Open;
+
+Modal.Window = Window;
+
+Modal.Close = Close;
+
+export default Modal;
+
+//cloneElement lets you create a react element using another react element as a starting point.

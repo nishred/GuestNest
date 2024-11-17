@@ -4,20 +4,7 @@ import Spinner from "../../ui/Spinner";
 import CabinRow from "./CabinRow";
 
 import useCabins from "../../hooks/useCabins";
-
-
-const Table = styled.div`
-  border: 1px solid var(--color-grey-200);
-
-  font-size: 1.4rem;
-  background-color: var(--color-grey-0);
-  border-radius: 7px;
-  overflow: hidden;
-
-  & .discount {
-    text-align: center;
-  }
-`;
+import Table from "../../ui/Table";
 
 const TableHeader = styled.header`
   display: grid;
@@ -39,17 +26,13 @@ const TableHeader = styled.header`
 //querFn is the actual function responsible for fetching the data from the api
 
 const CabinTable = () => {
-
-
-
-  const {isLoading,error,data} = useCabins();
-
+  const { isLoading, error, data: cabins } = useCabins();
 
   if (isLoading) return <Spinner />;
 
   return (
-    <Table>
-      <TableHeader>
+    <Table columns="2fr 2fr 2fr 1.6fr 2fr 2fr">
+      <Table.Header>
         <div></div>
 
         <div>Cabin</div>
@@ -58,14 +41,17 @@ const CabinTable = () => {
 
         <div>Price</div>
 
-        <div className="discount">Discount</div>
+        <div>Discount</div>
 
         <div></div>
-      </TableHeader>
+      </Table.Header>
 
-      {data.map((cabin) => {
-        return <CabinRow cabin={cabin} key={cabin.id} />;
-      })}
+      <Table.Body
+        data={cabins}
+        render={(cabin) => {
+          return <CabinRow cabin={cabin} key={cabin.id} />;
+        }}
+      ></Table.Body>
     </Table>
   );
 };

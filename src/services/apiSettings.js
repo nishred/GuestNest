@@ -11,7 +11,11 @@ export async function getSettings() {
 }
 
 // We expect a newSetting object that looks like {setting: newValue}
+
+// The newSetting object need not be an entire object. It can be a partial object, and we will merge it with the existing settings object. It must only contain the fields that must be updated
 export async function updateSetting(newSetting) {
+
+  console.log("update settings called")
 
   const { data, error } = await supabase
     .from("settings")

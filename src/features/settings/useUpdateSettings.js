@@ -11,7 +11,7 @@ export default function useUpdateSettings() {
     mutationFn: updateSetting,
 
     onSuccess: () => {
-      toast("Settings updated successfully");
+      toast.success("Settings updated successfully");
 
       queryClient.invalidateQueries({
         queryKey: ["settings"],

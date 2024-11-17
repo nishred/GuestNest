@@ -11,7 +11,16 @@ import CreateCabinForm from "./CreateCabinForm";
 
 import { AiOutlineDash } from "react-icons/ai";
 import useDeleteCabin from "../../hooks/useDeleteCabin";
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
 
+import Table from "../../ui/Table";
+
+import useCreateCabin from "../../hooks/useCreateCabin";
+
+import { FaRegCopy } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
+import { FaTrashAlt } from "react-icons/fa";
 
 const TableRow = styled.div`
   display: grid;
@@ -26,7 +35,7 @@ const TableRow = styled.div`
 `;
 
 const Img = styled.img`
-  display: block;
+  display: inline-block;
   width: 6.4rem;
   aspect-ratio: 3 / 2;
   object-fit: cover;
@@ -53,32 +62,26 @@ const Discount = styled.div`
 
   text-align: center;
 
-  & .icon
-  {
-    margin : 0px auto;
-
+  & .icon {
+    margin: 0px auto;
   }
 `;
 
 const CabinRowButton = styled.button`
-  background-color: var(--color-brand-600);
-  padding: 10px 20px;
-  color: wheat;
-
+  background-color: wheat;
+  padding: 2px 4px;
   border-radius: 8px;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
-  gap: 0.8rem;
+  justify-content: center;
+  gap: 4px;
 `;
-
 
 // in onSuccess we tell what has to happen after a successful mutation
 
 const CabinRow = ({ cabin }) => {
-  const [showEditForm, setShowEditForm] = useState(false);
-
   // const queryClient = useQueryClient();
 
   // const { isLoading: isDeleting, mutate } = useMutation({
@@ -96,7 +99,9 @@ const CabinRow = ({ cabin }) => {
   //   },
   // });
 
-  const {isDeleting,mutate} = useDeleteCabin()
+  const { isDeleting, mutate } = useDeleteCabin();
+
+  const { isCreating, mutate: createMutate } = useCreateCabin();
 
   const {
     id: cabinId,
@@ -110,8 +115,10 @@ const CabinRow = ({ cabin }) => {
 
   return (
     <>
-      <TableRow>
-        <Img src={image} />
+      <Table.Row>
+        <div>
+          <Img src={image} />
+        </div>
 
         <Cabin>{name}</Cabin>
 
@@ -119,28 +126,61 @@ const CabinRow = ({ cabin }) => {
 
         <Price>{formatCurrency(regularPrice)}</Price>
 
-        <Discount>{(discount>0)?formatCurrency(discount):(<AiOutlineDash className="icon" size = {24}/>)}</Discount>
+        <Discount>
+          {discount > 0 ? (
+            formatCurrency(discount)
+          ) : (
+            <AiOutlineDash className="icon" size={24} />
+          )}
+        </Discount>
 
         <ButtonContainer>
           <CabinRowButton
             onClick={() => {
-              setShowEditForm((prev) => !prev);
+              createMutate({
+                name: cabin.name,
+                maxCapacity: cabin.maxCapacity,
+                regularPrice: cabin.regularPrice,
+                discount: cabin.discount,
+                description: cabin.description,
+                image: cabin.image,
+              });
             }}
           >
-            Edit
+            <FaRegCopy />
           </CabinRowButton>
 
-          <CabinRowButton
-            onClick={() => {
-              mutate(cabinId);
-            }}
-          >
-            Delete
-          </CabinRowButton>
+          <Modal>
+            <Modal.Open>
+              <CabinRowButton>
+                <MdEdit />
+              </CabinRowButton>
+            </Modal.Open>
+
+            <Modal.Window>
+              <CreateCabinForm cabinToEdit={cabin} />
+            </Modal.Window>
+          </Modal>
+
+          <Modal>
+            <Modal.Open>
+              <CabinRowButton>
+                <FaTrashAlt />
+              </CabinRowButton>
+            </Modal.Open>
+
+            <Modal.Window>
+              <ConfirmDelete
+                resourceName={cabin.name}
+                disabled={isDeleting}
+                onConfirm={() => {
+                  mutate(cabinId);
+                }}
+              />
+            </Modal.Window>
+          </Modal>
         </ButtonContainer>
-      </TableRow>
-
-      {showEditForm && <CreateCabinForm cabinToEdit={cabin} />}
+      </Table.Row>
     </>
   );
 };

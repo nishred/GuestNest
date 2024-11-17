@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 
 const StyledTable = styled.div`
@@ -15,10 +16,17 @@ const CommonRow = styled.div`
   column-gap: 2.4rem;
   align-items: center;
   transition: none;
+
+  &>div
+  {
+    text-align: center;
+
+  }
+
 `;
 
 const StyledHeader = styled(CommonRow)`
-  padding: 1.6rem 2.4rem;
+  padding: 1.2rem 2.4rem;
 
   background-color: var(--color-grey-50);
   border-bottom: 1px solid var(--color-grey-100);
@@ -26,14 +34,19 @@ const StyledHeader = styled(CommonRow)`
   letter-spacing: 0.4px;
   font-weight: 600;
   color: var(--color-grey-600);
+
+
+
 `;
 
 const StyledRow = styled(CommonRow)`
   padding: 1.2rem 2.4rem;
 
   &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
+    border-bottom: 1px solid var(--color-grey-100);  
   }
+
+
 `;
 
 const StyledBody = styled.section`
@@ -58,3 +71,41 @@ const Empty = styled.p`
   text-align: center;
   margin: 2.4rem;
 `;
+
+const TableContext = React.createContext();
+
+const Table = ({ columns, children }) => {
+  return (
+    <TableContext.Provider value={{ columns }}>
+      <StyledTable>{children}</StyledTable>
+    </TableContext.Provider>
+  );
+};
+
+const Header = ({ children }) => {
+  const { columns } = React.useContext(TableContext);
+
+  return <StyledHeader columns={columns}>{children}</StyledHeader>;
+};
+
+const Row = ({ children }) => {
+  const { columns } = React.useContext(TableContext);
+
+  return <StyledRow columns={columns}>{children}</StyledRow>;
+};
+
+const Body = ({ render, data }) => {
+  if (!data.length) {
+    return <Empty>No data available</Empty>;
+  }
+
+  return <StyledBody>{data.map(render)}</StyledBody>;
+};
+
+Table.Header = Header;
+Table.Row = Row;
+Table.Footer = Footer;
+
+Table.Body = Body;
+
+export default Table;

@@ -14,11 +14,6 @@ import Button from "../../ui/Button";
 
 import Spinner from "../../ui/Spinner";
 
-const UpdateSettingsButton = styled(Button)`
-  display: block;
-  margin-left: auto;
-  margin-right: 4rem;
-`;
 
 function UpdateSettingsForm() {
   const { data: settings, isLoading, error } = useSettings();
@@ -36,21 +31,25 @@ function UpdateSettingsForm() {
 
   const { errors } = formState;
 
-  function onSubmit(data) {
-    console.log("update settings form data called");
-
-    mutate(data);
-  }
-
   function onError(errors) {
     console.log(errors);
   }
 
+  function handleOnBlur(key,value)
+  {
+
+     mutate({[key]:value})
+
+  }
+
+
   if(isLoading)
     return <Spinner />
 
+
+
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form>
       <FormRow
         label="Minimum nights/booking"
         error={errors.minBookingLength?.message}
@@ -69,6 +68,7 @@ function UpdateSettingsForm() {
           })}
           type="number"
           id="min-nights"
+          onBlur={(e) => handleOnBlur("minBookingLength",e.target.value)}
         />
       </FormRow>
       <FormRow
@@ -87,6 +87,7 @@ function UpdateSettingsForm() {
           })}
           type="number"
           id="max-nights"
+          onBlur={(e) => handleOnBlur("maxBookingLength",e.target.value)}
         />
       </FormRow>
       <FormRow
@@ -99,9 +100,10 @@ function UpdateSettingsForm() {
           })}
           type="number"
           id="max-guests"
+          onBlur={(e) => handleOnBlur("maxGuestsPerBooking",e.target.value)}
         />
       </FormRow>
-
+      
       <FormRow label="Breakfast price" error={errors.breakfastPrice?.message}>
         <Input
           {...register("breakfastPrice", {
@@ -109,12 +111,14 @@ function UpdateSettingsForm() {
           })}
           type="number"
           id="breakfast-price"
+          onBlur={(e) => handleOnBlur("breakfastPrice",e.target.value)}
         />
       </FormRow>
-
-      <UpdateSettingsButton>Update settings</UpdateSettingsButton>
     </Form>
   );
 }
 
 export default UpdateSettingsForm;
+
+
+// the blur event is triggered when an element loses focus
