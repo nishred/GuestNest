@@ -8,6 +8,7 @@ import Table from "../../ui/Table";
 import { useSearchParams } from "react-router-dom";
 import React from "react";
 import Empty from "../../ui/Empty";
+import Menus from "../../ui/Menus";
 
 const TableHeader = styled.header`
   display: grid;
@@ -59,6 +60,7 @@ const CabinTable = () => {
   );
 
   return (
+    <Menus>
     <Table columns="2fr 2fr 2fr 1.6fr 2fr 2fr">
       <Table.Header>
         <div></div>
@@ -81,6 +83,8 @@ const CabinTable = () => {
         }}
       ></Table.Body>
     </Table>
+    
+    </Menus>
   );
 };
 

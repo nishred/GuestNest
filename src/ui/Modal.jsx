@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import { createPortal } from "react-dom";
-import { cloneElement, useEffect, useState } from "react";
+import { cloneElement, useEffect, useState, useRef } from "react";
 
 import React from "react";
 import useEditCabin from "../hooks/useEditCabin";
@@ -81,36 +81,55 @@ const Button = styled.button`
 const ModalContext = React.createContext();
 
 const Modal = ({ children }) => {
-  const { ref, isModalOpen, setIsModalOpen } = useCloseModal();
+  const [openModal, setOpenModal] = useState("");
 
   return (
-    <ModalContext.Provider value={{ ref, isModalOpen, setIsModalOpen }}>
+    <ModalContext.Provider value={{ openModal, setOpenModal }}>
       {children}
     </ModalContext.Provider>
   );
 };
 
-const Open = ({ children }) => {
-  const { setIsModalOpen } = React.useContext(ModalContext);
+const Open = ({ children, opens }) => {
+  const { setOpenModal } = React.useContext(ModalContext);
 
   return cloneElement(children, {
     onClick: (e) => {
       e.stopPropagation();
-      setIsModalOpen(true);
+      setOpenModal(opens);
     },
   });
 };
 
-const Window = ({ children, close }) => {
-  const { isModalOpen, setIsModalOpen, ref } = React.useContext(ModalContext);
+const Window = ({ children, name }) => {
+  const { openModal, setOpenModal } = React.useContext(ModalContext);
 
-  if (!isModalOpen) return null;
+  const ref = useRef();
+
+  useEffect(() => {
+    if (openModal === name) {
+      console.log("name", name);
+      function handleClickOutside(e) {
+        if (ref.current && !ref.current.contains(e.target)) {
+          setOpenModal("");
+        }
+      }
+
+      document.addEventListener("click", handleClickOutside);
+
+      return () => {
+        document.removeEventListener("click", handleClickOutside);
+      };
+    }
+  }, [openModal]);
+
+  if (openModal !== name) return null;
 
   return createPortal(
     <Overlay>
       <StyledModal ref={ref}>
-        {cloneElement(children, { setIsModalOpen: setIsModalOpen })}
-        <Button onClick={() => setIsModalOpen(false)}>{close}</Button>
+        {cloneElement(children, { setOpenModal })}
+        <Button onClick={() => setOpenModal("")}>{close}</Button>
       </StyledModal>
     </Overlay>,
     document.body
@@ -118,11 +137,9 @@ const Window = ({ children, close }) => {
 };
 
 const Close = ({ children }) => {
-  const { setIsModalOpen } = React.useContext(ModalContext);
+  const { setOpenModal } = React.useContext(ModalContext);
 
-  return (
-    <Button onClick={() => setIsModalOpen(false)}>{children} Manvitha</Button>
-  );
+  return <Button onClick={() => setOpenModal("")}>{children}</Button>;
 };
 
 Modal.Open = Open;

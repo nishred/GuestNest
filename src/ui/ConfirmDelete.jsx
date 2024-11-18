@@ -21,7 +21,7 @@ const StyledConfirmDelete = styled.div`
   }
 `;
 
-function ConfirmDelete({ resourceName, onConfirm, disabled ,setIsModalOpen}) {
+function ConfirmDelete({ resourceName, onConfirm, disabled ,setOpenModal}) {
   return (
     <StyledConfirmDelete>
       <Heading as="h3">Delete {resourceName}</Heading>
@@ -33,9 +33,9 @@ function ConfirmDelete({ resourceName, onConfirm, disabled ,setIsModalOpen}) {
       <div>
         <Button onClick={() => {
 
-            if(setIsModalOpen)
+            if(setOpenModal)
             {
-              setIsModalOpen(false)
+              setOpenModal("")
             }
 
         }} variation="secondary" disabled={disabled}>

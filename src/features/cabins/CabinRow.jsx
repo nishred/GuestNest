@@ -115,83 +115,86 @@ const CabinRow = ({ cabin }) => {
   } = cabin;
 
   return (
-    <>
-      <Table.Row>
-        <div>
-          <Img src={image} />
-        </div>
+    <Table.Row>
+      <div>
+        <Img src={image} />
+      </div>
 
-        <Cabin>{name}</Cabin>
+      <Cabin>{name}</Cabin>
 
-        <div>Fits up to {maxCapacity} guests</div>
+      <div>Fits up to {maxCapacity} guests</div>
 
-        <Price>{formatCurrency(regularPrice)}</Price>
+      <Price>{formatCurrency(regularPrice)}</Price>
 
-        <Discount>
-          {discount > 0 ? (
-            formatCurrency(discount)
-          ) : (
-            <AiOutlineDash className="icon" size={24} />
-          )}
-        </Discount>
+      <Discount>
+        {discount > 0 ? (
+          formatCurrency(discount)
+        ) : (
+          <AiOutlineDash className="icon" size={24} />
+        )}
+      </Discount>
 
+      <ButtonContainer>
+        {/*duplicate*/}
+        <CabinRowButton
+          onClick={() => {
+            createMutate({
+              name: cabin.name,
+              maxCapacity: cabin.maxCapacity,
+              regularPrice: cabin.regularPrice,
+              discount: cabin.discount,
+              description: cabin.description,
+              image: cabin.image,
+            });
+          }}
+        >
+          <FaRegCopy size={20} />
+        </CabinRowButton>
 
-          <ButtonContainer>
-          {/*duplicate*/}
-          <CabinRowButton
-            onClick={() => {
-              createMutate({
-                name: cabin.name,
-                maxCapacity: cabin.maxCapacity,
-                regularPrice: cabin.regularPrice,
-                discount: cabin.discount,
-                description: cabin.description,
-                image: cabin.image,
-              });
-            }}
-          >
-            <FaRegCopy size={20}/>
-          </CabinRowButton>
+        {/*edit*/}
+        <Modal>
+          <Modal.Open opens="edit">
+            <CabinRowButton>
+              <MdEdit size={20} />
+            </CabinRowButton>
+          </Modal.Open>
 
+          <Modal.Window name="edit">
+            <CreateCabinForm cabinToEdit={cabin} />
+          </Modal.Window>
+        </Modal>
 
-          {/*edit*/}
-          <Modal>
-            <Modal.Open>
-              <CabinRowButton>
-                <MdEdit size={20}/>
-              </CabinRowButton>
-            </Modal.Open>
+        {/*delete*/}
+        <Modal>
+          <Modal.Open opens="delete">
+            <CabinRowButton>
+              <FaTrashAlt size={20} />
+            </CabinRowButton>
+          </Modal.Open>
 
-            <Modal.Window>
-              <CreateCabinForm cabinToEdit={cabin} />
-            </Modal.Window>
-          </Modal>
+          <Modal.Window name="delete">
+            <ConfirmDelete
+              resourceName={cabin.name}
+              disabled={isDeleting}
+              onConfirm={() => {
+                mutate(cabinId);
+              }}
+            />
+          </Modal.Window>
+        </Modal>
 
-          {/*delete*/}
-          <Modal>
-            <Modal.Open>
-              <CabinRowButton>
-                <FaTrashAlt size={20}/>
-              </CabinRowButton>
-            </Modal.Open>
+        <Menus.Menu>
+          <Menus.Toggle id={cabinId} />
 
-            <Modal.Window>
-              <ConfirmDelete
-                resourceName={cabin.name}
-                disabled={isDeleting}
-                onConfirm={() => {
-                  mutate(cabinId);
-                }}
-              />
-            </Modal.Window>
-          </Modal>
-         </ButtonContainer>
-
-      </Table.Row>
-    </>
+          <Menus.List id={cabinId}>
+            <Menus.Button>Delete</Menus.Button>
+            <Menus.Button>Edit</Menus.Button>
+            <Menus.Button>Duplicate</Menus.Button>
+          </Menus.List>
+        </Menus.Menu>
+      </ButtonContainer>
+    </Table.Row>
   );
 };
 
 export default CabinRow;
-
-

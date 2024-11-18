@@ -17,10 +17,8 @@ import useEditCabin from "../../hooks/useEditCabin";
 
 import FormRow from "../../ui/FormRow";
 
-function CreateCabinForm({ cabinToEdit = {}, setIsModalOpen }) {
+function CreateCabinForm({ cabinToEdit = {}, setOpenModal }) {
   const { id: editId, ...editValues } = cabinToEdit;
-
-  console.log(editValues);
 
   const isEditSession = editId ? true : false;
 
@@ -90,7 +88,7 @@ function CreateCabinForm({ cabinToEdit = {}, setIsModalOpen }) {
         {
           onSuccess: (data) => {
             reset();
-            setIsModalOpen?.(false);
+            setOpenModal?.("");
           },
         }
       );
@@ -101,7 +99,7 @@ function CreateCabinForm({ cabinToEdit = {}, setIsModalOpen }) {
           onSuccess: (data) => {
             reset();
 
-            setIsModalOpen?.(false);
+            setOpenModal?.("");
           },
         }
       );
@@ -116,7 +114,7 @@ function CreateCabinForm({ cabinToEdit = {}, setIsModalOpen }) {
   return (
     <Form
       onSubmit={handleSubmit(onSubmit, onError)}
-      type={setIsModalOpen ? "modal" : ""}
+      type={setOpenModal ? "modal" : ""}
     >
       <FormRow label={"name"} error={errors.name?.message}>
         <Input
@@ -210,7 +208,7 @@ function CreateCabinForm({ cabinToEdit = {}, setIsModalOpen }) {
           type="reset"
           onClick={(e) => {
             e.preventDefault();
-            if (setIsModalOpen) setIsModalOpen(false);
+            if (setOpenModal) setOpenModal("");
           }}
         >
           Cancel

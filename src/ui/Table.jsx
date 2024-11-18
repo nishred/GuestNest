@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 const StyledTable = styled.div`
@@ -66,6 +66,7 @@ const Empty = styled.p`
 
 const TableContext = React.createContext();
 
+
 const Table = ({ columns, children }) => {
   return (
     <TableContext.Provider value={{ columns }}>
@@ -87,11 +88,14 @@ const Row = ({ children }) => {
 };
 
 const Body = ({ render, data }) => {
+
   if (!data.length) {
     return <Empty>No data available</Empty>;
   }
-
-  return <StyledBody>{data.map(render)}</StyledBody>;
+  
+  return (
+      <StyledBody>{data.map(render)}</StyledBody>
+  );
 };
 
 Table.Header = Header;

@@ -32,10 +32,10 @@ import { FaXmark } from "react-icons/fa6";
 const AddCabin = () => {
   return (
     <Modal>
-      <Modal.Open>
+      <Modal.Open opens = "create">
         <Button>Add new Cabin</Button>
       </Modal.Open>
-      <Modal.Window close={<FaXmark />}>
+      <Modal.Window close={<FaXmark />} name = "create">
         <CreateCabinForm />
       </Modal.Window>
 
