@@ -22,6 +22,8 @@ import { FaRegCopy } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { FaTrashAlt } from "react-icons/fa";
 
+import Menus from "../../ui/Menus";
+
 const TableRow = styled.div`
   display: grid;
   grid-template-columns: 0.6fr 1fr 1.6fr 1fr 1fr 1fr;
@@ -70,13 +72,13 @@ const Discount = styled.div`
 const CabinRowButton = styled.button`
   background-color: wheat;
   padding: 2px 4px;
-  border-radius: 8px;
+  border-radius: 4px;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-  gap: 4px;
+  gap: 8px;
 `;
 
 // in onSuccess we tell what has to happen after a successful mutation
@@ -100,7 +102,6 @@ const CabinRow = ({ cabin }) => {
   // });
 
   const { isDeleting, mutate } = useDeleteCabin();
-
   const { isCreating, mutate: createMutate } = useCreateCabin();
 
   const {
@@ -134,7 +135,9 @@ const CabinRow = ({ cabin }) => {
           )}
         </Discount>
 
-        <ButtonContainer>
+
+          <ButtonContainer>
+          {/*duplicate*/}
           <CabinRowButton
             onClick={() => {
               createMutate({
@@ -147,13 +150,15 @@ const CabinRow = ({ cabin }) => {
               });
             }}
           >
-            <FaRegCopy />
+            <FaRegCopy size={20}/>
           </CabinRowButton>
 
+
+          {/*edit*/}
           <Modal>
             <Modal.Open>
               <CabinRowButton>
-                <MdEdit />
+                <MdEdit size={20}/>
               </CabinRowButton>
             </Modal.Open>
 
@@ -162,10 +167,11 @@ const CabinRow = ({ cabin }) => {
             </Modal.Window>
           </Modal>
 
+          {/*delete*/}
           <Modal>
             <Modal.Open>
               <CabinRowButton>
-                <FaTrashAlt />
+                <FaTrashAlt size={20}/>
               </CabinRowButton>
             </Modal.Open>
 
@@ -179,10 +185,13 @@ const CabinRow = ({ cabin }) => {
               />
             </Modal.Window>
           </Modal>
-        </ButtonContainer>
+         </ButtonContainer>
+
       </Table.Row>
     </>
   );
 };
 
 export default CabinRow;
+
+

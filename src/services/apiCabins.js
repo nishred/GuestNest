@@ -57,6 +57,8 @@ export async function createEditCabin(newCabin, id) {
     );
   }
 
+  console.log(data,"retrieved data")
+
   return data;
 }
 

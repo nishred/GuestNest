@@ -81,11 +81,10 @@ const Button = styled.button`
 const ModalContext = React.createContext();
 
 const Modal = ({ children }) => {
-
-  const {ref,isModalOpen,setIsModalOpen} = useCloseModal()  
+  const { ref, isModalOpen, setIsModalOpen } = useCloseModal();
 
   return (
-    <ModalContext.Provider value={{ ref,isModalOpen, setIsModalOpen }}>
+    <ModalContext.Provider value={{ ref, isModalOpen, setIsModalOpen }}>
       {children}
     </ModalContext.Provider>
   );
@@ -103,14 +102,14 @@ const Open = ({ children }) => {
 };
 
 const Window = ({ children, close }) => {
-  const { isModalOpen, setIsModalOpen,ref } = React.useContext(ModalContext);
+  const { isModalOpen, setIsModalOpen, ref } = React.useContext(ModalContext);
 
   if (!isModalOpen) return null;
 
   return createPortal(
     <Overlay>
       <StyledModal ref={ref}>
-        {cloneElement(children, { setIsModalOpen : setIsModalOpen })}
+        {cloneElement(children, { setIsModalOpen: setIsModalOpen })}
         <Button onClick={() => setIsModalOpen(false)}>{close}</Button>
       </StyledModal>
     </Overlay>,

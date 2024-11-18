@@ -164,8 +164,6 @@ function CreateCabinForm({ cabinToEdit = {}, setIsModalOpen }) {
             required: "Discount is required",
 
             validate: (value) => {
-              console.table(typeof value, typeof getValues().regularPrice);
-
               const compute =
                 (Number(value) >= 0 &&
                   Number(value) <= Number(getValues().regularPrice)) ||

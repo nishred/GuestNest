@@ -17,12 +17,9 @@ const CommonRow = styled.div`
   align-items: center;
   transition: none;
 
-  &>div
-  {
+  & > div {
     text-align: center;
-
   }
-
 `;
 
 const StyledHeader = styled(CommonRow)`
@@ -34,19 +31,14 @@ const StyledHeader = styled(CommonRow)`
   letter-spacing: 0.4px;
   font-weight: 600;
   color: var(--color-grey-600);
-
-
-
 `;
 
 const StyledRow = styled(CommonRow)`
   padding: 1.2rem 2.4rem;
 
   &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);  
+    border-bottom: 1px solid var(--color-grey-100);
   }
-
-
 `;
 
 const StyledBody = styled.section`
