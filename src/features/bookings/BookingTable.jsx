@@ -6,48 +6,22 @@ import Empty from "../../ui/Empty";
 import useBookings from "./useBookings";
 import Spinner from "../../ui/Spinner";
 import { useSearchParams } from "react-router-dom";
+import Pagination from "../../ui/Pagination";
 
 function BookingTable() {
   const { isLoading, error, data } = useBookings();
 
-  const [searchParams] = useSearchParams();
+  const bookings = data?.data
 
-  const bookings = data?.data;
+  const count = data?.count
+
 
   if (isLoading) return <Spinner />;
 
+
   if (!bookings?.length) return <Empty resource="bookings" />;
 
-  const filterStatus = searchParams.get("status");
 
-  const sortBy = searchParams.get("sortBy");
-
-  let filteredBookings = bookings;
-
-  if (filterStatus) {
-    filteredBookings = filteredBookings.filter((booking) => {
-      return booking.status === filterStatus || filterStatus === "all";
-    });
-  }
-
-  if (sortBy) {
-    const [key, direction] = sortBy.split("-");
-
-    filteredBookings = filteredBookings.sort((a, b) => {
-
-       if(typeof a[key] === 'string') {
-        return direction === "asc"
-          ? a[key].localeCompare(b[key])
-          : b[key].localeCompare(a[key]);
-       }      
-       else
-       {
-          return direction === "asc" ? a[key] - b[key] : b[key] - a[key];
-
-       }
-
-    });
-  }
 
   return (
     <Menus>
@@ -62,11 +36,16 @@ function BookingTable() {
         </Table.Header>
 
         <Table.Body
-          data={filteredBookings}
+          data={bookings}
           render={(booking) => (
             <BookingRow key={booking.id} booking={booking} />
           )}
         />
+
+        <Table.Footer>
+        <Pagination count={count}/>
+        </Table.Footer>
+
       </Table>
     </Menus>
   );
