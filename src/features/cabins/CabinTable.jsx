@@ -61,7 +61,7 @@ const CabinTable = () => {
 
   return (
     <Menus>
-    <Table columns="2fr 2fr 2fr 1.6fr 2fr 2fr">
+    <Table columns="2fr 2fr 2fr 1.6fr 2fr 0.6fr">
       <Table.Header>
         <div></div>
 

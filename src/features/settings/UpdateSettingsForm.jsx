@@ -16,7 +16,7 @@ import Spinner from "../../ui/Spinner";
 
 
 function UpdateSettingsForm() {
-  const { data: settings, isLoading, error } = useSettings();
+  const { settings, isLoading, error } = useSettings();
 
   const { isUpdating, mutate } = useUpdateSettings();
 

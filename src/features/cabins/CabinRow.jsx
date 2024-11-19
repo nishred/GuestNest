@@ -18,7 +18,7 @@ import Table from "../../ui/Table";
 
 import useCreateCabin from "../../hooks/useCreateCabin";
 
-import { FaRegCopy } from "react-icons/fa";
+import { Fa500Px, FaRegCopy } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { FaTrashAlt } from "react-icons/fa";
 
@@ -135,61 +135,49 @@ const CabinRow = ({ cabin }) => {
       </Discount>
 
       <ButtonContainer>
-        {/*duplicate*/}
-        <CabinRowButton
-          onClick={() => {
-            createMutate({
-              name: cabin.name,
-              maxCapacity: cabin.maxCapacity,
-              regularPrice: cabin.regularPrice,
-              discount: cabin.discount,
-              description: cabin.description,
-              image: cabin.image,
-            });
-          }}
-        >
-          <FaRegCopy size={20} />
-        </CabinRowButton>
-
-        {/*edit*/}
-        <Modal>
-          <Modal.Open opens="edit">
-            <CabinRowButton>
-              <MdEdit size={20} />
-            </CabinRowButton>
-          </Modal.Open>
-
-          <Modal.Window name="edit">
-            <CreateCabinForm cabinToEdit={cabin} />
-          </Modal.Window>
-        </Modal>
-
-        {/*delete*/}
-        <Modal>
-          <Modal.Open opens="delete">
-            <CabinRowButton>
-              <FaTrashAlt size={20} />
-            </CabinRowButton>
-          </Modal.Open>
-
-          <Modal.Window name="delete">
-            <ConfirmDelete
-              resourceName={cabin.name}
-              disabled={isDeleting}
-              onConfirm={() => {
-                mutate(cabinId);
-              }}
-            />
-          </Modal.Window>
-        </Modal>
-
         <Menus.Menu>
           <Menus.Toggle id={cabinId} />
 
           <Menus.List id={cabinId}>
-            <Menus.Button>Delete</Menus.Button>
-            <Menus.Button>Edit</Menus.Button>
-            <Menus.Button>Duplicate</Menus.Button>
+            <Menus.Button
+              onClick={() => {
+                createMutate({
+                  name: cabin.name,
+                  maxCapacity: cabin.maxCapacity,
+                  regularPrice: cabin.regularPrice,
+                  discount: cabin.discount,
+                  description: cabin.description,
+                  image: cabin.image,
+                });
+              }}
+              icon={<FaRegCopy />}
+            >
+              Duplicate
+            </Menus.Button>
+
+            <Modal>
+              <Modal.Open opens="edit">
+                <Menus.Button icon={<MdEdit />}>Edit</Menus.Button>
+              </Modal.Open>
+              <Modal.Window name={"edit"}>
+                <CreateCabinForm cabinToEdit={cabin} />
+              </Modal.Window>
+            </Modal>
+
+            <Modal>
+              <Modal.Open opens="delete">
+                <Menus.Button icon={<FaTrashAlt />}>Delete</Menus.Button>
+              </Modal.Open>
+              <Modal.Window name="delete">
+                <ConfirmDelete
+                  resourceName={cabin.name}
+                  disabled={isDeleting}
+                  onConfirm={() => {
+                    mutate(cabinId);
+                  }}
+                />
+              </Modal.Window>
+            </Modal>
           </Menus.List>
         </Menus.Menu>
       </ButtonContainer>

@@ -48,6 +48,9 @@ const Filter = ({filterKey,options}) => {
     setSearchParams((prevParams) => {
       prevParams.set(filterKey, value);
 
+      if(prevParams.get("page"))
+        prevParams.set("page",1)
+
       return prevParams;
     });
   }

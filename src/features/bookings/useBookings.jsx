@@ -40,27 +40,25 @@ export default function useBookings() {
     },
   });
 
+  const count = data?.count;
 
-  const count = data?.count
+  const totalPages = Math.ceil(count / PAGE_SIZE);
 
-  const totalPages = Math.ceil(count/PAGE_SIZE);
+  if (page < totalPages)
+    queryClient.prefetchQuery({
+      queryKey: ["booking", filter, sortBy, page + 1],
+      queryFn: async () => {
+        return await getBookings({ filter, sortBy, page: page + 1 });
+      },
+    });
 
-  if(page < totalPages)
-  queryClient.prefetchQuery({
-    queryKey: ["booking", filter, sortBy, page + 1],
-    queryFn: async () => {
-      return await getBookings({ filter, sortBy, page: page + 1 });
-    },
-  });
-  
-
-  if(page > 1)
-  queryClient.prefetchQuery({
-    queryKey: ["booking", filter, sortBy, page - 1],
-    queryFn: async () => {
-      return await getBookings({ filter, sortBy, page: page - 1 });
-    },
-  });
+  if (page > 1)
+    queryClient.prefetchQuery({
+      queryKey: ["booking", filter, sortBy, page - 1],
+      queryFn: async () => {
+        return await getBookings({ filter, sortBy, page: page - 1 });
+      },
+    });
 
   // this array acts like a dependency array. If the query depends on any value, it should be added here.
   //now whenever the filter changes, react query will re-fetch the data

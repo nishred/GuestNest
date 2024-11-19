@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { createPortal } from "react-dom";
 import { cloneElement, useEffect, useState, useRef } from "react";
 
+import { FaRegCircleXmark } from "react-icons/fa6";
+
 import React from "react";
 import useEditCabin from "../hooks/useEditCabin";
-import useCloseModal from "../hooks/useCloseModal";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -106,30 +107,21 @@ const Window = ({ children, name }) => {
 
   const ref = useRef();
 
-  useEffect(() => {
-    if (openModal === name) {
-      console.log("name", name);
-      function handleClickOutside(e) {
-        if (ref.current && !ref.current.contains(e.target)) {
-          setOpenModal("");
-        }
-      }
-
-      document.addEventListener("click", handleClickOutside);
-
-      return () => {
-        document.removeEventListener("click", handleClickOutside);
-      };
-    }
-  }, [openModal]);
-
   if (openModal !== name) return null;
 
   return createPortal(
-    <Overlay>
+    <Overlay
+      onClick={(e) => {
+        if (ref.current && !ref.current.contains(e.target)) {
+          setOpenModal("");
+        }
+
+        e.stopPropagation();
+      }}
+    >
       <StyledModal ref={ref}>
         {cloneElement(children, { setOpenModal })}
-        <Button onClick={() => setOpenModal("")}>{close}</Button>
+        <Button onClick={() => setOpenModal("")}>{<FaRegCircleXmark />}</Button>
       </StyledModal>
     </Overlay>,
     document.body
