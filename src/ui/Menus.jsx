@@ -71,41 +71,28 @@ const Menus = ({ children }) => {
   const [openId, setOpenId] = useState("");
   const [position, setPosition] = useState(null);
 
-  const ref = useRef()
+  const ref = useRef();
 
-   useEffect(() => {
+  useEffect(() => {
+    if (openId) {
+      function handleClickOutside(e) {
+        if (ref.current && !ref.current.contains(e.target)) {
+          setOpenId("");
+        }
+      }
 
-     if(openId)
-     {
+      document.addEventListener("click", handleClickOutside);
 
-       function handleClickOutside(e)
-       {
-  
-          if(ref.current && !ref.current.contains(e.target))
-          {
-            setOpenId('')
-          }
-
-       }
-
-
-       document.addEventListener('click',handleClickOutside)
-
-       return () => {
-
-        document.removeEventListener('click',handleClickOutside)
-
-       }
-
-
-     }
-
-
-   },[openId])
-
+      return () => {
+        document.removeEventListener("click", handleClickOutside);
+      };
+    }
+  }, [openId]);
 
   return (
-    <MenusContext.Provider value={{ openId, setOpenId, position, setPosition,ref }}>
+    <MenusContext.Provider
+      value={{ openId, setOpenId, position, setPosition, ref }}
+    >
       {children}
     </MenusContext.Provider>
   );
@@ -135,25 +122,25 @@ const Toggle = ({ id }) => {
   );
 };
 
-const List = ({ id, children}) => {
-  const { openId, position,ref } = useContext(MenusContext);
+const List = ({ id, children }) => {
+  const { openId, position, ref } = useContext(MenusContext);
 
   if (openId !== id) return null;
 
   return createPortal(
-    <StyledList ref={ref} position={position}>{children}</StyledList>,
+    <StyledList ref={ref} position={position}>
+      {children}
+    </StyledList>,
     document.body
   );
 };
 
-const Button = ({ children,icon,onClick }) => {
-
-
+const Button = ({ children, icon, onClick }) => {
   return (
-    <li onClick={onClick?onClick:null}>
+    <li onClick={onClick ? onClick : null}>
       <StyledButton>
-      <span>{children}</span>
-      {icon}
+        <span>{children}</span>
+        {icon}
       </StyledButton>
     </li>
   );

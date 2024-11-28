@@ -61,29 +61,28 @@ const CabinTable = () => {
 
   return (
     <Menus>
-    <Table columns="2fr 2fr 2fr 1.6fr 2fr 0.6fr">
-      <Table.Header>
-        <div></div>
+      <Table columns="2fr 2fr 2fr 1.6fr 2fr 0.6fr">
+        <Table.Header>
+          <div></div>
 
-        <div>Cabin</div>
+          <div>Cabin</div>
 
-        <div>Capacity</div>
+          <div>Capacity</div>
 
-        <div>Price</div>
+          <div>Price</div>
 
-        <div>Discount</div>
+          <div>Discount</div>
 
-        <div></div>
-      </Table.Header>
+          <div></div>
+        </Table.Header>
 
-      <Table.Body
-        data={sortedCabins}
-        render={(cabin) => {
-          return <CabinRow cabin={cabin} key={cabin.id} />;
-        }}
-      ></Table.Body>
-    </Table>
-    
+        <Table.Body
+          data={sortedCabins}
+          render={(cabin) => {
+            return <CabinRow cabin={cabin} key={cabin.id} />;
+          }}
+        ></Table.Body>
+      </Table>
     </Menus>
   );
 };

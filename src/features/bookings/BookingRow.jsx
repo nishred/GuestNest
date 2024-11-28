@@ -14,6 +14,12 @@ import { useNavigate } from "react-router-dom";
 
 import { useCheckout } from "../check-in-out/useCheckout";
 
+import { FaTrashAlt } from "react-icons/fa";
+import { useDeleteBooking } from "./useDeleteBooking";
+
+import Modal from "../../ui/Modal";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+
 const Cabin = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
@@ -58,6 +64,8 @@ function BookingRow({
   const navigate = useNavigate();
 
   const { checkout, isCheckingOut } = useCheckout();
+
+  const { deleteMutate, isDeleting } = useDeleteBooking();
 
   const statusToTagName = {
     unconfirmed: "blue",
@@ -126,6 +134,26 @@ function BookingRow({
             >
               Check out
             </Menus.Button>
+          )}
+
+          {status === "checked-out" && (
+            <Modal>
+
+            <Modal.Open opens = "delete">
+            <Menus.Button icon = {<FaTrashAlt />}>
+              Delete
+            </Menus.Button>
+            </Modal.Open>
+
+
+            <Modal.Window name = "delete">
+            
+            <ConfirmDelete disabled={isDeleting} resourceName={`#${bookingId} booking`} onConfirm={() => {
+                deleteMutate(bookingId);
+              }} />
+            
+            </Modal.Window>
+            </Modal>
           )}
         </Menus.List>
       </Menus.Menu>

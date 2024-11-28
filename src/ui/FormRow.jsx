@@ -1,13 +1,12 @@
 import styled from "styled-components";
 
-import Input from "./Input";
-
-
 const StyledFormRow = styled.div`
   display: grid;
   align-items: center;
   grid-template-columns: 24rem 1fr 1.2fr;
   gap: 2.4rem;
+
+  background-color: wheat;
 
   padding: 1.2rem 0;
 
@@ -37,34 +36,16 @@ const Label = styled.label`
 const Error = styled.span`
   font-size: 1.4rem;
   color: var(--color-red-700);
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
 `;
 
-
-const FormRow = ({label,children,error}) => {
-  
-  if(label === "discount")
-    console.log(error)
-
+function FormRow({ label, error, children }) {
   return (
-
     <StyledFormRow>
-    
-    {label && <Label htmlFor={children.props.id}>{label}</Label>}
-    
-    {children}
-    
-    {error && <Error>{error}</Error>}
-    
+      {label && <Label htmlFor={children.props.id}>{label}</Label>}
+      {children}
+      {error && <Error>{error}</Error>}
     </StyledFormRow>
-
-  )
-
-
+  );
 }
 
-
-
-export default FormRow
+export default FormRow;

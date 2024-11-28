@@ -20,6 +20,8 @@ import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Booking from "./pages/Booking";
 
+import { login } from "./services/apiAuth";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -31,6 +33,16 @@ const queryClient = new QueryClient({
 // this query client sets up the cache behind the scenes. We want to provide the query data to the entire application tree
 
 function App() {
+  login({ email: "guestnest@guestnest.com", password: "123456789" }).then(
+    (data) => {
+      console.log(data);
+    }
+  );
+
+  // login({ email: "1234", password: "pendu" }).then((data) => {
+  //   console.log(data);
+  // });
+
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
